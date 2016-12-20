@@ -7,19 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E0104A521E08D512009624E0 /* FriendsControllerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0104A511E08D512009624E0 /* FriendsControllerHelper.swift */; };
 		E0BE57C81E06307B00D91B82 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BE57C71E06307B00D91B82 /* AppDelegate.swift */; };
-		E0BE57CA1E06307B00D91B82 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BE57C91E06307B00D91B82 /* ViewController.swift */; };
-		E0BE57CD1E06307B00D91B82 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E0BE57CB1E06307B00D91B82 /* Main.storyboard */; };
+		E0BE57CA1E06307B00D91B82 /* FriendsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BE57C91E06307B00D91B82 /* FriendsController.swift */; };
 		E0BE57D01E06307B00D91B82 /* Messenger_Clone.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E0BE57CE1E06307B00D91B82 /* Messenger_Clone.xcdatamodeld */; };
 		E0BE57D21E06307B00D91B82 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E0BE57D11E06307B00D91B82 /* Assets.xcassets */; };
 		E0BE57D51E06307B00D91B82 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E0BE57D31E06307B00D91B82 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E0104A511E08D512009624E0 /* FriendsControllerHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendsControllerHelper.swift; sourceTree = "<group>"; };
 		E0BE57C41E06307B00D91B82 /* Messenger Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Messenger Clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0BE57C71E06307B00D91B82 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		E0BE57C91E06307B00D91B82 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		E0BE57CC1E06307B00D91B82 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		E0BE57C91E06307B00D91B82 /* FriendsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsController.swift; sourceTree = "<group>"; };
 		E0BE57CF1E06307B00D91B82 /* Messenger_Clone.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Messenger_Clone.xcdatamodel; sourceTree = "<group>"; };
 		E0BE57D11E06307B00D91B82 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E0BE57D41E06307B00D91B82 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -57,12 +57,12 @@
 			isa = PBXGroup;
 			children = (
 				E0BE57C71E06307B00D91B82 /* AppDelegate.swift */,
-				E0BE57C91E06307B00D91B82 /* ViewController.swift */,
-				E0BE57CB1E06307B00D91B82 /* Main.storyboard */,
+				E0BE57C91E06307B00D91B82 /* FriendsController.swift */,
 				E0BE57D11E06307B00D91B82 /* Assets.xcassets */,
 				E0BE57D31E06307B00D91B82 /* LaunchScreen.storyboard */,
 				E0BE57D61E06307B00D91B82 /* Info.plist */,
 				E0BE57CE1E06307B00D91B82 /* Messenger_Clone.xcdatamodeld */,
+				E0104A511E08D512009624E0 /* FriendsControllerHelper.swift */,
 			);
 			path = "Messenger Clone";
 			sourceTree = "<group>";
@@ -129,7 +129,6 @@
 			files = (
 				E0BE57D51E06307B00D91B82 /* LaunchScreen.storyboard in Resources */,
 				E0BE57D21E06307B00D91B82 /* Assets.xcassets in Resources */,
-				E0BE57CD1E06307B00D91B82 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,22 +140,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				E0BE57D01E06307B00D91B82 /* Messenger_Clone.xcdatamodeld in Sources */,
-				E0BE57CA1E06307B00D91B82 /* ViewController.swift in Sources */,
+				E0BE57CA1E06307B00D91B82 /* FriendsController.swift in Sources */,
 				E0BE57C81E06307B00D91B82 /* AppDelegate.swift in Sources */,
+				E0104A521E08D512009624E0 /* FriendsControllerHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		E0BE57CB1E06307B00D91B82 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E0BE57CC1E06307B00D91B82 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		E0BE57D31E06307B00D91B82 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -268,7 +260,7 @@
 				DEVELOPMENT_TEAM = AS82F53XC3;
 				INFOPLIST_FILE = "Messenger Clone/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "CeriOS.Messenger-Clone";
+				PRODUCT_BUNDLE_IDENTIFIER = "CeriOS.Messenger--Chat-Clone";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -281,7 +273,7 @@
 				DEVELOPMENT_TEAM = AS82F53XC3;
 				INFOPLIST_FILE = "Messenger Clone/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "CeriOS.Messenger-Clone";
+				PRODUCT_BUNDLE_IDENTIFIER = "CeriOS.Messenger--Chat-Clone";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -306,6 +298,7 @@
 				E0BE57DB1E06307B00D91B82 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
