@@ -16,6 +16,8 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
     
     var messages: [Message]?
     
+    var friends: [Friend]?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +29,8 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
         collectionView?.alwaysBounceVertical = true
         //registering the cell class for use on your collectionView
         collectionView?.register(MessageCell.self, forCellWithReuseIdentifier: cellId)
+        
+        batchDelete()
         
         //call this func to fill the cells
         setupData()
@@ -48,11 +52,18 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
         //safely unwrapping, applying messages into the cell message variable
         if let message = messages?[indexPath.item] {
             
-            cell.message = message
+            cell.messages = message
         }
         
         return cell
         
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let layout = UICollectionViewFlowLayout()
+        let controller = ChatLogController(collectionViewLayout: layout)
+        controller.friend = messages?[indexPath.item].friend
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     //accessable when you declare the UICollectionViewDelegateFlowLayout
@@ -66,23 +77,55 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
 }
 
 class MessageCell: BaseCell {
+    
+    //when you click on a cell, highlight it with blue BGColor and change the label.text to white
+    override var isHighlighted: Bool{
+        didSet{
+            //a short (if/else statement) if isHighlighted == true, bg = blue else white
+            backgroundColor = isHighlighted ?  UIColor(red: 0, green: 134/255, blue: 249/255, alpha: 1) : UIColor.white
+            nameLabel.textColor = isHighlighted ? UIColor.white : UIColor.black
+            messageLabel.textColor = isHighlighted ? UIColor.white : UIColor.black
+            timeLabel.textColor = isHighlighted ? UIColor.white : UIColor.black
+
+        }
+        
+    }
+    
+    
     //if this is set, cell.nameLabel.text will equal [indexPath.item]
-    var message: Message? {
+    var messages: Message? {
         
         didSet{
-            nameLabel.text = message?.friend?.name
+            nameLabel.text = messages?.friend?.name
             //safely unwrapping the optional messages and friend
-            if let profileImageName = message?.friend?.profileImageName {
+            if let profileImageName = messages?.friend?.profileImageName {
                 
                 profileImageView.image = UIImage(named: profileImageName)
+                hasReadImageView.image = UIImage(named: profileImageName)
                 
             }
             
-            messageLabel.text = message?.text
-            if let date = message?.date {
+            messageLabel.text = messages?.text
+            // This closure decides what the dateFormat will be for the timeLabel.text
+            if let date = messages?.date{
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "h:mm a"
                 
+                //these 2 lines below both work. have to use the var instead of the object (Date) else the type wont be TimeInterval...instead it will be (Date)-> TimeInterval
+                //let elapseTimeInSeconds = date.timeIntervalSince(Date())
+                let elapseTimeInSeconds = date.timeIntervalSinceNow
+                
+                let secondsInDays: TimeInterval = 60 * 60 * 24
+                
+                if elapseTimeInSeconds < -(7 * secondsInDays) {
+                    
+                    dateFormatter.dateFormat = "MM/dd/yy"
+                    
+                } else if elapseTimeInSeconds < -secondsInDays {
+                    
+                    dateFormatter.dateFormat = "EEE"
+                }
+
                 timeLabel.text = dateFormatter.string(from: date as Date)
             }
             

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		E0104A521E08D512009624E0 /* FriendsControllerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0104A511E08D512009624E0 /* FriendsControllerHelper.swift */; };
+		E0104A5C1E09C016009624E0 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0104A5B1E09C016009624E0 /* ChatLogController.swift */; };
+		E0104A5E1E0B68EF009624E0 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0104A5D1E0B68EF009624E0 /* CustomTabBarController.swift */; };
 		E0BE57C81E06307B00D91B82 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BE57C71E06307B00D91B82 /* AppDelegate.swift */; };
 		E0BE57CA1E06307B00D91B82 /* FriendsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0BE57C91E06307B00D91B82 /* FriendsController.swift */; };
 		E0BE57D01E06307B00D91B82 /* Messenger_Clone.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E0BE57CE1E06307B00D91B82 /* Messenger_Clone.xcdatamodeld */; };
@@ -17,6 +19,8 @@
 
 /* Begin PBXFileReference section */
 		E0104A511E08D512009624E0 /* FriendsControllerHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendsControllerHelper.swift; sourceTree = "<group>"; };
+		E0104A5B1E09C016009624E0 /* ChatLogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
+		E0104A5D1E0B68EF009624E0 /* CustomTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		E0BE57C41E06307B00D91B82 /* Messenger Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Messenger Clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0BE57C71E06307B00D91B82 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E0BE57C91E06307B00D91B82 /* FriendsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsController.swift; sourceTree = "<group>"; };
@@ -63,6 +67,8 @@
 				E0BE57D61E06307B00D91B82 /* Info.plist */,
 				E0BE57CE1E06307B00D91B82 /* Messenger_Clone.xcdatamodeld */,
 				E0104A511E08D512009624E0 /* FriendsControllerHelper.swift */,
+				E0104A5B1E09C016009624E0 /* ChatLogController.swift */,
+				E0104A5D1E0B68EF009624E0 /* CustomTabBarController.swift */,
 			);
 			path = "Messenger Clone";
 			sourceTree = "<group>";
@@ -139,7 +145,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E0104A5C1E09C016009624E0 /* ChatLogController.swift in Sources */,
 				E0BE57D01E06307B00D91B82 /* Messenger_Clone.xcdatamodeld in Sources */,
+				E0104A5E1E0B68EF009624E0 /* CustomTabBarController.swift in Sources */,
 				E0BE57CA1E06307B00D91B82 /* FriendsController.swift in Sources */,
 				E0BE57C81E06307B00D91B82 /* AppDelegate.swift in Sources */,
 				E0104A521E08D512009624E0 /* FriendsControllerHelper.swift in Sources */,
