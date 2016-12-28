@@ -21,23 +21,6 @@ extension FriendsController {
         
     }
     
-    private func createMessageWithText(text: String, friend: Friend, minutesAgo: Double, context: NSManagedObjectContext) {
-        
-        //setting up the message as a Message() type and filling in the parameters
-        let message = NSEntityDescription.insertNewObject(forEntityName: "Message", into: context) as! Message
-        message.friend = friend
-        message.text = text
-        message.date = NSDate().addingTimeInterval(-minutesAgo * 60)
-        
-    }
-    
-//        private func createFriend(name: String, profileImage: String, context: NSManagedObjectContext) {
-//    
-//            let friend = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
-//            friend.name = name
-//            friend.profileImageName = profileImage
-//    
-//        }
     
     
     //setting up the data
@@ -65,28 +48,16 @@ extension FriendsController {
         celeste.name = "Celeste"
         celeste.profileImageName = "photo_celeste"
         
-        let saw = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
-        saw.name = "Saw"
-        saw.profileImageName = "photo_saw"
-
+        createSawMessageWithContext(context: context)
         
         
-        
-        
-        //createFriend(name: "Adagio", profileImage: "photo_adagio", context: context)
-        //createFriend(name: "Glaive", profileImage: "photo_glaive", context: context)
-        
-        createMessageWithText(text: "RatatatatatatatatataStab! I'm gonna chase you to the ends of the worlds with my boots and stab you in the back with my knife! Come back here you silly goose!", friend: saw, minutesAgo: 60 * 25, context: context)
-        
-        createMessageWithText(text: "Gatling gun Gatling gun Gatling all the way!", friend: saw, minutesAgo: 60 * 24 * 8, context: context)
-        
-        createMessageWithText(text: "This is boredom at its best!", friend: adagio, minutesAgo: 2, context: context)
-        createMessageWithText(text: "Somebody! get a soda.", friend: adagio, minutesAgo: 3, context: context)
-        createMessageWithText(text: "Im going to cut you into little pieces.", friend: adagio, minutesAgo: 1, context: context)
-        createMessageWithText(text: "Eat axe, bitch!!", friend: glaive, minutesAgo: 4, context: context)
-        createMessageWithText(text: "Anybody wants to be my pingpong ball?!", friend: glaive, minutesAgo: 0, context: context)
-        createMessageWithText(text: "Drunk right now!", friend: ringo, minutesAgo: 2, context: context)
-        createMessageWithText(text: "Stars and Boom!", friend: celeste, minutesAgo: 60 * 24 * 8, context: context)
+        FriendsController.createMessageWithText(text: "This is boredom at its best!", friend: adagio, minutesAgo: 2, context: context)
+        FriendsController.createMessageWithText(text: "Somebody! get a soda.", friend: adagio, minutesAgo: 3, context: context)
+        FriendsController.createMessageWithText(text: "Im going to cut you into little pieces.", friend: adagio, minutesAgo: 1, context: context)
+        FriendsController.createMessageWithText(text: "Eat axe, bitch!!", friend: glaive, minutesAgo: 4, context: context)
+        FriendsController.createMessageWithText(text: "Anybody wants to be my pingpong ball?!", friend: glaive, minutesAgo: 0, context: context)
+        FriendsController.createMessageWithText(text: "Drunk right now!", friend: ringo, minutesAgo: 2, context: context)
+        FriendsController.createMessageWithText(text: "Stars and Boom!", friend: celeste, minutesAgo: 60 * 24 * 8, context: context)
         
         do {
             try context.save()
@@ -98,6 +69,51 @@ extension FriendsController {
         getMessages()
         
     }
+    //new func that creates messages for specific friend so we can work closely with responses
+    private func createSawMessageWithContext(context: NSManagedObjectContext) {
+        
+        let saw = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
+        saw.name = "Saw"
+        saw.profileImageName = "photo_saw"
+        
+        FriendsController.createMessageWithText(text: "RatatatatatatatatataStab! I'm gonna chase you to the ends of the worlds with my boots and stab you in the back with my knife! Come back here you silly goose!", friend: saw, minutesAgo: 60 * 25, context: context)
+        
+        FriendsController.createMessageWithText(text: "Gatling gun Gatling gun Gatling all the way!", friend: saw, minutesAgo: 60 * 24 * 8, context: context)
+        
+        FriendsController.createMessageWithText(text: "lol Saw OP. Nerf or RITO! Beach balloon stab and nerf water gun spray", friend: saw, minutesAgo: 1, context: context)
+
+
+        //reply message
+        //adding isSender parameter and assigning a value of true.
+        FriendsController.createMessageWithText(text: "Take this stun and take this...hah that was easy!", friend: saw, minutesAgo: 3, context: context, isSender: true)
+        
+        FriendsController.createMessageWithText(text: "You're too easy to stun pahahahahaha. Take this DPS! pahahahahaha...wait...why am I dead! damn you crucible!!!", friend: saw, minutesAgo: 2, context: context, isSender: true)
+
+
+        
+        
+    }
+    
+    //static turns it into a global func that can be called by viewController.createMessageWithText()
+    static func createMessageWithText(text: String, friend: Friend, minutesAgo: Double, context: NSManagedObjectContext, isSender: Bool = false) -> Message{
+        
+        //setting up the message as a Message() type and filling in the parameters
+        let message = NSEntityDescription.insertNewObject(forEntityName: "Message", into: context) as! Message
+        message.friend = friend
+        message.text = text
+        message.date = NSDate().addingTimeInterval(-minutesAgo * 60)
+        message.isSender = NSNumber(booleanLiteral: isSender) as Bool //new parameter to figure who sent the message
+        return message
+    }
+    
+    //        private func createFriend(name: String, profileImage: String, context: NSManagedObjectContext) {
+    //
+    //            let friend = NSEntityDescription.insertNewObject(forEntityName: "Friend", into: context) as! Friend
+    //            friend.name = name
+    //            friend.profileImageName = profileImage
+    //    
+    //        }
+
     
     //fetching the messages
     func getMessages() {
