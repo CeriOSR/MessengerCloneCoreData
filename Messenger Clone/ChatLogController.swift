@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlowLayout, NSFetchedResultsControllerDelegate {
     
     private var cellId = "cellId"
     
@@ -18,17 +18,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         didSet{
             //nav bar title = friend's name
             navigationItem.title = friend?.name
-            //assigning the messages into an array and downcasting to [Messages] to match types
-            messages = friend?.messages?.allObjects as? [Message]
-            //sorting messages in decending order
-            messages?.sort(by: { $0.date?.compare($1.date as! Date) == ComparisonResult.orderedAscending })
-
             
         }
         
     }
-    
-    var messages: [Message]?
+    //CLEAN UP, NOT USING MESSAGES ARRAY ANYMORE BUT INSTEAD THE FETCHRESULTCONTROLLER.
+    //var messages: [Message]?
     
     let messageInputContainerView: UIView = {
         
@@ -76,18 +71,15 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         let context = createGetContext()
         
-        let message = FriendsController.createMessageWithText(text: inputTextField.text!, friend: friend!, minutesAgo: 0, context: context, isSender: true)
+        FriendsController.createMessageWithText(text: inputTextField.text!, friend: friend!, minutesAgo: 0, context: context, isSender: true)
         
         do {
             
             try context.save()
-            messages?.append(message)
-            let item = messages!.count - 1
-            let insertionIndexPath = NSIndexPath(item: item, section: 0)
-            
-            collectionView?.insertItems(at: [insertionIndexPath as IndexPath])
-            collectionView?.scrollToItem(at: insertionIndexPath as IndexPath, at: .bottom, animated: true)
             inputTextField.text = nil
+
+            
+            
             
         }catch let err {
             print(err)
@@ -100,26 +92,13 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         let context = createGetContext()
         //creating the message
-        let message = FriendsController.createMessageWithText(text: "Test message that will appear when you press simulate!", friend: friend!, minutesAgo: 1, context: context, isSender: false)
+        FriendsController.createMessageWithText(text: "Test message that will appear when you press simulate!", friend: friend!, minutesAgo: 1, context: context, isSender: false)
         
+        FriendsController.createMessageWithText(text: "Test2 message that will appear when you press simulate!", friend: friend!, minutesAgo: 1, context: context, isSender: false)
+
         do {
             //saving the message
             try context.save()
-            //appending the message to the array
-            messages?.append(message)
-            //sorting the array based on time
-            messages = messages?.sorted(by: ({$0.date!.compare($1.date! as Date) == .orderedAscending}))
-            
-            //inserting the message into the collectionView
-            if let item = messages?.index(of: message) {
-                
-                //figuring out where the message is in the array
-                let recievingIndexPath = NSIndexPath(item: item, section: 0)
-                //inserting it in the collectionView based on its indexPath in the array
-                collectionView?.insertItems(at: [recievingIndexPath as IndexPath])
-
-                
-            }
             
         } catch let err {
             
@@ -128,11 +107,71 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
     }
     
+    //this variable will be used to fetch data from coreData and put into the collectionView
+    //use lazy var instead of let so you can access self for the createGetContext() and for the friend.name
+    //specify the the type <Message> else it wont identify that it has a member friend for the predicate
+    lazy var fetchedResultsController: NSFetchedResultsController<Message> = {
+        //fetch request for the coredata
+        let fetchRequest = NSFetchRequest<Message>(entityName: "Message")
+        //sortDescriptor necessary for fetchRequest else crash
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true )] //sorts by date
+        //fetch only messages of the friend clicked
+        fetchRequest.predicate = NSPredicate(format: "friend.name = %@", self.friend!.name!)
+        let context = self.createGetContext()
+        
+        //the above are parameters needed for the NSFetchedResultController() method
+        let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        frc.delegate = self
+        return frc
+    }()
+    //this array allows us to append more than 1 message at a time.
+    var blockOperations = [BlockOperation]()
+
+    //everytime a new object is inserted into coredata, this method is called because we made self as the delegate for fetchedResultsController. This is a delegate method
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        //insertion into collectionView and scrolling down to the new item
+        //blockOperations enables us to append more than 1 message at a time
+        if type == .insert {
+            blockOperations.append(BlockOperation(block: { 
+                self.collectionView?.insertItems(at: [newIndexPath!])
+            }))
+        }
+    }
+    //this func runs batchUpdates and we will loop through the batch and update them 1 by 1
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        collectionView?.performBatchUpdates({ 
+            
+            //run the insertions of block operations loop through it and and update the collectionView
+            for operations in self.blockOperations {
+                
+                operations.start()
+                
+            }
+            
+        }, completion: { (completed) in
+            //scrolling down to the latest message
+            let lastItem = self.fetchedResultsController.sections![0].numberOfObjects - 1
+            let indexPath = IndexPath(item: lastItem, section: 0)
+            self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+            
+        })
+    }
+    
     //Variable used to play around with the bottom constraint of the messageInputContainerView
     var bottomConstraint: NSLayoutConstraint?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        do {
+            
+            try fetchedResultsController.performFetch()
+            print(fetchedResultsController.sections![0].numberOfObjects)
+        } catch let err {
+            
+            print(err)
+        }
+        
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Simulate", style: .plain, target: self, action: #selector(simulate))
         
@@ -186,11 +225,11 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
                 self.view.layoutIfNeeded()
             }, completion: { (completed) in
                 
-                //animates so it moves the bottom cell to the top of the keyboard. find the last item and assign it to the indexPath var, then use the .scrollToItem() to scroll to it
-                
+                //scrolling down to the last message when the keyboard appears
                 if isKeyboardShowing {
-                    let indexPath = NSIndexPath(item: self.messages!.count - 1, section: 0)
-                    self.collectionView?.scrollToItem(at: indexPath as IndexPath, at: UICollectionViewScrollPosition.bottom, animated: true)
+                    let lastItem = self.fetchedResultsController.sections![0].numberOfObjects - 1
+                    let indexPath = IndexPath(item: lastItem, section: 0)
+                    self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
                 }
                 
             })
@@ -225,10 +264,10 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     
     //number of cells = messages.count
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let count = messages?.count {
+        
+        if let count = fetchedResultsController.sections?[0].numberOfObjects {
             
             return count
-            
         }
         
         return 0
@@ -239,13 +278,14 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatLogMessageCell
         
-        cell.messageTextView.text = messages?[indexPath.item].text
+        let message = fetchedResultsController.object(at: indexPath) //as! Message
+
+        cell.messageTextView.text = message.text
         
         //getting an estimated height for the cells depending on length of the textView.text
         //we use the NSString().boundingRect() to get the estimatedFrame.height. Context is almost always nil.
         //unwrapping message?[indexPath.item] so the code is not redudant
-        if let message = messages?[indexPath.item],
-            let messageText = message.text,
+        if  let messageText = message.text,
             let profileImageName = message.friend?.profileImageName {
             
             cell.profileImageView.image = UIImage(named: profileImageName)
@@ -306,10 +346,12 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     //size of the cell depends on size of message
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
+        let message = fetchedResultsController.object(at: indexPath)
+        
         //getting an estimated height for the cells depending on length of the textView.text
         //we use the NSString().boundingRect() to get the estimatedFrame.height. Context is almost always nil.
         //also unwrapping the profileImageName here
-        if let messageText = messages?[indexPath.item].text {
+        if let messageText = message.text {
             
             //arbitrary maximum height of 1000 and width of 250
             let size = CGSize(width: 250, height: 1000)
